@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 当前项目的基础信息 -->
+    <groupId>demo.java</groupId>
+    <artifactId>java-demo-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>java-demo</name>
+    <url>https://github.com/leishiguang/models-of-concurrency</url>
+    <description>java demo for concurrent, jvm, net, netty...</description>
+
+    <properties>
+        <!-- 指定 JDK 版本，如不指定，默认将为 1.6-->
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>${project.reporting.outputEncoding}</project.build.sourceEncoding>
+        <netty.version>4.1.32.final</netty.version>
+        <ulisesbocchio.jasypt.version>2.1.1</ulisesbocchio.jasypt.version>
+        <junit.jupiter.version>5.3.2</junit.jupiter.version>
+        <junit.platform.version>1.2.0</junit.platform.version>
+        <caffeine.version>2.6.2</caffeine.version>
+        <lombok.version>1.18.6</lombok.version>
+    </properties>
+
+    <!-- 管理所有模块 -->
+    <modules>
+        <module>concurrent</module>
+        <module>netty</module>
+        <module>nio</module>
+        <module>common</module>
+    </modules>
+
+    <!-- 指定项目中公用的依赖 -->
+    <dependencies>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.jupiter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>guava</artifactId>
+            <version>${caffeine.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+    </dependencies>
+</project>
