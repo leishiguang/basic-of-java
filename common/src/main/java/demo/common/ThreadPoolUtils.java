@@ -1,7 +1,6 @@
 package demo.common;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import lombok.Getter;
 
 import java.util.concurrent.*;
 
@@ -17,7 +16,7 @@ public class ThreadPoolUtils {
     private static final ExecutorService EXECUTOR_SERVICE = new ThreadPoolExecutor(
             0, Integer.MAX_VALUE,
             60L, TimeUnit.SECONDS,
-            new SynchronousQueue<Runnable>(),
+            new SynchronousQueue<>(),
             new ThreadFactoryBuilder().setNameFormat("common-%d").build());
 
     private ThreadPoolUtils() {
