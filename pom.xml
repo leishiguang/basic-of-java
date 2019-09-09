@@ -34,6 +34,7 @@
         <module>netty</module>
         <module>nio</module>
         <module>common</module>
+        <module>algorithm</module>
     </modules>
 
     <!-- 指定项目中公用的依赖 -->
