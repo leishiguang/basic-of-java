@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReadWriteLock;
  */
 public class MyReadWriteLock implements ReadWriteLock {
 
-    AbstractQueuedSynchronizer myAqs = new AbstractQueuedSynchronizer(){
+    private AbstractQueuedSynchronizer myAqs = new AbstractQueuedSynchronizer(){
 
         /**
          * 加写锁
@@ -66,7 +66,7 @@ public class MyReadWriteLock implements ReadWriteLock {
         return new Lock() {
             @Override
             public void lock() {
-                myAqs.acquireShared();
+                myAqs.acquire();
             }
 
             @Override
