@@ -21,7 +21,6 @@ import java.util.Set;
  * @author leishiguang
  * @since v1.0
  */
-
 public class Dijkstra {
     private final static String TAG = "Dijkstra";
 
