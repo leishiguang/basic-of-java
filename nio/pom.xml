@@ -12,4 +12,12 @@
 
     <artifactId>nio</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>demo.java</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>
