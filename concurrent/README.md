@@ -13,13 +13,19 @@ ThreadSignalWithVariableTest：多个线程之间共享参数的一种方式，�
 
 ### lock
 
-AbstractQueuedSynchronizer：自己实现的抽象队列同步器，封装了公共资源占用、释放、线程等待、唤醒等接口和具体实现，可以用来实现锁。
+AbstractQueuedSynchronizer：自己实现的抽象队列同步器，封装了公共资源占用、释放、线程等待、唤醒等接口和具体实现，可以用来实现锁；
 
 ExclusiveLock/ExclusiveLockTest：用自己实现的抽象队列同步器，实现的一把独享锁；
 
 Semaphore/SemaphoreTest：自己实现的信号量，访问限流；
 
 CountDownLatch/CountDownLatchTest：自己实现的栅栏，等待所有异步线程执行完；
+
+CyclicBarrier/CyclicBarrier：自己实现的循环屏障，如游戏大厅 5 人组队；
+
+MyReadWriteLock/MyReadWriteLockTest：自己实现的读写锁；
+
+
 
 ### list
 

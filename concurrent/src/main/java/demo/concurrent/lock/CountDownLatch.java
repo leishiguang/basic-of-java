@@ -3,7 +3,10 @@ package demo.concurrent.lock;
 import demo.concurrent.lock.aqs.AbstractQueuedSynchronizer;
 
 /**
- * 栅栏的实现
+ * 计数栅栏的实现
+ * 场景如：
+ *   1. 等待异步线程执行完
+ *   2. 并发执行
  *
  * @author leishiguang
  * @since v1.0

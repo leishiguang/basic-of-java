@@ -4,6 +4,8 @@ import demo.concurrent.lock.aqs.AbstractQueuedSynchronizer;
 
 /**
  * 自定义信号量实现
+ * 使用场景如：
+ *   1. 限流
  *
  * @author leishiguang
  * @since v1.0
