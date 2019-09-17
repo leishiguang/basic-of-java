@@ -1,4 +1,4 @@
-package demo.algorithm.leetcode;
+package demo.leetcode.problems;
 
 /**
  * 28. Implement strStr()

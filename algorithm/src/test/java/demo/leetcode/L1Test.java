@@ -1,5 +1,6 @@
-package demo.algorithm.leetcode;
+package demo.leetcode;
 
+import demo.leetcode.problems.L1;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

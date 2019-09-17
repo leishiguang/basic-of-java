@@ -1,4 +1,4 @@
-package demo.algorithm.leetcode;
+package demo.leetcode.problems;
 
 /**
  * LeetCode 第8题：字符串转换整数 (atoi)

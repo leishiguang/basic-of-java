@@ -1,4 +1,4 @@
-package demo.algorithm.leetcode;
+package demo.leetcode.problems;
 
 /**
  * 21.Merge Two Sorted Lists,合并两个有序链表
