@@ -63,15 +63,15 @@ public class IsPalindrome {
     }
 
     /**
-     * 翻转，返回新的链表头
+     * 翻转链表，返回新的链表头
      */
-    private ListNode reverse(ListNode start){
-        if(start == null){
+    private ListNode reverse(ListNode head){
+        if(head == null){
             return null;
         }
-        ListNode currentNode = start;
-        ListNode nextNode = start.next;
-        start.next = null;
+        ListNode currentNode = head;
+        ListNode nextNode = head.next;
+        head.next = null;
         ListNode tmpNode;
         while (nextNode != null) {
             tmpNode = nextNode.next;
