@@ -10,7 +10,7 @@ package demo.leetcode.easy.strings;
  */
 public class FirstUniqChar {
 
-    public static int firstUniqChar(String s) {
+    public int firstUniqChar(String s) {
         char[] chars = s.toCharArray();
         //0：出现次数，1：出现的索引
         int[][] charTimesAndIndex = new int[2][26];
@@ -35,8 +35,4 @@ public class FirstUniqChar {
         return min;
     }
 
-    public static void main(String[] args) {
-        String str = "abcdeft";
-        System.out.println(firstUniqChar(str));
-    }
 }
