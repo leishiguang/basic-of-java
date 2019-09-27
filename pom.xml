@@ -5,12 +5,12 @@
 
     <!-- 当前项目的基础信息 -->
     <groupId>demo.java</groupId>
-    <artifactId>java-demo-parent</artifactId>
+    <artifactId>basic-of-java-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
-    <name>java-demo</name>
-    <url>https://github.com/leishiguang/models-of-concurrency</url>
+    <name>basic-of-java</name>
+    <url>https://github.com/leishiguang/basic-of-java</url>
     <description>java demo for concurrent, jvm, net, netty...</description>
 
     <properties>
