@@ -11,5 +11,13 @@
 
     <artifactId>algorithm</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>guava</artifactId>
+            <version>${caffeine.version}</version>
+        </dependency>
+    </dependencies>
+
 
 </project>
