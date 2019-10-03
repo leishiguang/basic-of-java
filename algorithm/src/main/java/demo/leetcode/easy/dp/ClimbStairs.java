@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 public class ClimbStairs {
 
-    private HashMap<Integer,Integer> map = new HashMap<>();
+    private HashMap<Integer, Integer> map = new HashMap<>();
 
 
     /**
@@ -28,9 +28,22 @@ public class ClimbStairs {
         if (n == 2) {
             return 2;
         }
-        if (!map.containsKey(n)){
-            map.put(n,climbStairs(n - 1) + climbStairs(n - 2));
+        if (!map.containsKey(n)) {
+            map.put(n, climbStairs(n - 1) + climbStairs(n - 2));
         }
         return map.get(n);
+    }
+
+    /**
+     * 数组方式记录动态规划
+     */
+    public int climbStairs2(int n) {
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        dp[2] = 2;
+        for (int i = 3; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
     }
 }
