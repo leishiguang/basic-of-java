@@ -1,8 +1,5 @@
 package demo.leetcode.easy.sort;
 
-import javax.management.MXBean;
-import java.util.TooManyListenersException;
-
 /**
  * 第一个错误的版本
  * https://leetcode-cn.com/explore/interview/card/top-interview-questions-easy/8/sorting-and-searching/53/
