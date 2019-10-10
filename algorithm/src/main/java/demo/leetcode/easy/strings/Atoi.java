@@ -9,7 +9,7 @@ package demo.leetcode.easy.strings;
  */
 public class Atoi {
 
-    public static int myAtoi(String str) {
+    public int myAtoi(String str) {
         if ("".equals(str)) {
             return 0;
         }
@@ -43,9 +43,5 @@ public class Atoi {
             index++;
         }
         return (int) (result * flag);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(myAtoi(" "));
     }
 }
