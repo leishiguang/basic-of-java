@@ -14,6 +14,7 @@ public class ValidSudoku {
     public boolean isValidSudoku(char[][] board) {
         int i, j, k, m;
         Set<Character> set1, set2, set3;
+        //行、列扫描
         for (i = 0; i < 9; i++) {
             set1 = new HashSet<>();
             set2 = new HashSet<>();
@@ -26,6 +27,7 @@ public class ValidSudoku {
                 }
             }
         }
+        //九宫格扫描
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 3; j++) {
                 set3 = new HashSet<>();
@@ -41,6 +43,9 @@ public class ValidSudoku {
         return true;
     }
 
+    /**
+     * 判断该字符是否在集合中出现过，是否合法
+     */
     private boolean isValidSudoku(char c, Set<Character> set) {
         if (c == '.') {
             return true;
