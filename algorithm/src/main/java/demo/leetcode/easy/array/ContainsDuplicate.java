@@ -1,7 +1,5 @@
 package demo.leetcode.easy.array;
 
-import sun.nio.cs.FastCharsetProvider;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
