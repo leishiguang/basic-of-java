@@ -7,5 +7,5 @@ package demo.leetcode.easy.trees;
  * @author leishiguang
  * @since v1.0
  */
-public class SortedArrayToBST {
+public class SortedArrayToBst {
 }
