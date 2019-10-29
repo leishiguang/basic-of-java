@@ -1,6 +1,6 @@
 package demo.netty.pipeline.util.internal;
 
-import static com.supermap.business.ow.api.base.util.internal.ObjectUtil.checkNotNull;
+import static demo.netty.pipeline.util.internal.ObjectUtil.checkNotNull;
 
 /**
  * todo: DESCRIPTION

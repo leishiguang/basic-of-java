@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author leishiguang
  * @since v1.0
  */
-@Slf4j
 public abstract class AbstractChannelInitializer<C extends Channel> extends
     ChannelInboundHandlerAdapter {
 
