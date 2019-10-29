@@ -2,6 +2,7 @@ package demo.netty.pipeline.channel;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 
 /**
  * 通道的职责链
@@ -22,6 +23,13 @@ public interface ChannelPipeline extends ChannelInboundInvoker, ChannelOutboundI
   ChannelPipeline addFirst(String name, ChannelHandler handler);
 
   /**
+   * Inserts {@link ChannelHandler}s at the first position of this pipeline.
+   *
+   * @param handlers the handlers to insert first
+   */
+  ChannelPipeline addFirst(ChannelHandler... handlers);
+
+  /**
    * 在职责链的末尾，添加一个新的处理类
    *
    * @param name    处理器名称
@@ -31,6 +39,14 @@ public interface ChannelPipeline extends ChannelInboundInvoker, ChannelOutboundI
   ChannelPipeline addLast(String name, ChannelHandler handler);
 
   /**
+   * Inserts {@link ChannelHandler}s at the last position of this pipeline.
+   *
+   * @param handlers  the handlers to insert last
+   *
+   */
+  ChannelPipeline addLast(ChannelHandler... handlers);
+
+  /**
    * 将职责链转化为有序的 map，key为名称，value 为 handler
    *
    * @return Map<String, ChannelHandler>
@@ -38,14 +54,26 @@ public interface ChannelPipeline extends ChannelInboundInvoker, ChannelOutboundI
   Map<String, ChannelHandler> toMap();
 
   /**
-   * 入站的数据准备
+   * Returns the {@link Channel} that this pipeline is attached to.
+   *
+   * @return the channel. {@code null} if this pipeline is not attached yet.
    */
-  @Override
-  ChannelPipeline beforeAll();
+  Channel channel();
 
   /**
-   * 执行入站请求
+   * Returns the context object of the specified {@link ChannelHandler} in this pipeline.
+   *
+   * @return the context object of the specified handler. {@code null} if there's no such handler in
+   * this pipeline.
    */
-  @Override
-  ChannelPipeline request();
+  ChannelHandlerContext context(ChannelHandler handler);
+
+  /**
+   * Removes the specified {@link ChannelHandler} from this pipeline.
+   *
+   * @param handler the {@link ChannelHandler} to remove
+   * @throws NoSuchElementException if there's no such handler in this pipeline
+   * @throws NullPointerException   if the specified handler is {@code null}
+   */
+  ChannelPipeline remove(ChannelHandler handler);
 }

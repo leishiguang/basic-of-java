@@ -2,6 +2,7 @@ package demo.netty.pipeline.channel;
 
 
 import demo.netty.pipeline.util.DefaultAttributeMap;
+import org.omg.SendingContext.RunTime;
 
 /**
  * todo: DESCRIPTION
@@ -38,11 +39,37 @@ public abstract class AbstractChannelHandlerContext extends DefaultAttributeMap 
   }
 
   /**
+   * 返回当前通道
+   */
+  @Override
+  public Channel channel() {
+    return pipeline.channel();
+  }
+
+  /**
    * Return the assigned {@link ChannelPipeline}
    */
   @Override
   public ChannelPipeline pipeline() {
     return pipeline;
+  }
+
+  @Override
+  public ChannelInboundInvoker initalizer() {
+    invokeChannelInitalizer(findContextInbound());
+    return this;
+  }
+
+  static void invokeChannelInitalizer(final AbstractChannelHandlerContext next) {
+    next.invokeChannelInitalizer();
+  }
+
+  private void invokeChannelInitalizer() {
+    try {
+      ((ChannelInboundHandler) handler()).channelInitalizer(this);
+    } catch (Throwable t) {
+      notifyHandlerException(t);
+    }
   }
 
   @Override
@@ -488,6 +515,6 @@ public abstract class AbstractChannelHandlerContext extends DefaultAttributeMap 
 
 
   private void notifyHandlerException(Throwable t) {
-    throw new RuntimeException("职责链异常待处理", t);
+    throw new RuntimeException(t.getMessage(), t);
   }
 }

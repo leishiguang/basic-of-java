@@ -20,6 +20,11 @@ public interface ChannelHandlerContext extends AttributeMap, ChannelInboundInvok
   String name();
 
   /**
+   * 返回当前通道
+   */
+  Channel channel();
+
+  /**
    * 当前绑定的处理类
    *
    * @return ChannelHandler

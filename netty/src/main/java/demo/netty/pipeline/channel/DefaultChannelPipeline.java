@@ -1,9 +1,11 @@
 package demo.netty.pipeline.channel;
 
+import demo.netty.pipeline.util.internal.ObjectUtil;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 
 /**
  * 默认的职责链
@@ -13,11 +15,12 @@ import java.util.Map.Entry;
  */
 public class DefaultChannelPipeline implements ChannelPipeline {
 
-  final AbstractChannelHandlerContext head;
-  final AbstractChannelHandlerContext tail;
+  private final AbstractChannelHandlerContext head;
+  private final AbstractChannelHandlerContext tail;
+  private final Channel channel;
 
-  protected DefaultChannelPipeline(Channel channel) {
-    //this.channel = ObjectUtil.checkNotNull(channel, "channel");
+  DefaultChannelPipeline(Channel channel) {
+    this.channel = ObjectUtil.checkNotNull(channel, "channel");
     //succeededFuture = new SucceededChannelFuture(channel, null);
     //voidPromise =  new VoidChannelPromise(channel, true);
 
@@ -47,6 +50,21 @@ public class DefaultChannelPipeline implements ChannelPipeline {
   }
 
   /**
+   * Inserts {@link ChannelHandler}s at the first position of this pipeline.
+   *
+   * @param handlers the handlers to insert first
+   */
+  @Override
+  public ChannelPipeline addFirst(ChannelHandler... handlers) {
+    int size = checkChannelHandlers(handlers);
+    for (int i = size - 1; i >= 0; i--) {
+      ChannelHandler h = handlers[i];
+      addFirst(null, h);
+    }
+    return this;
+  }
+
+  /**
    * 在职责链的末尾，添加一个新的处理类
    *
    * @param name    处理器名称
@@ -65,13 +83,96 @@ public class DefaultChannelPipeline implements ChannelPipeline {
   }
 
   /**
+   * Inserts {@link ChannelHandler}s at the last position of this pipeline.
+   *
+   * @param handlers the handlers to insert last
+   */
+  @Override
+  public ChannelPipeline addLast(ChannelHandler... handlers) {
+    int size = checkChannelHandlers(handlers);
+    for (int i = size - 1; i >= 0; i--) {
+      ChannelHandler h = handlers[i];
+      addLast(null, h);
+    }
+    return this;
+  }
+
+
+  @Override
+  public final ChannelHandlerContext context(ChannelHandler handler) {
+    if (handler == null) {
+      throw new NullPointerException("handler");
+    }
+
+    AbstractChannelHandlerContext ctx = head.next;
+    for (; ; ) {
+
+      if (ctx == null) {
+        return null;
+      }
+
+      if (ctx.handler() == handler) {
+        return ctx;
+      }
+
+      ctx = ctx.next;
+    }
+  }
+
+  @Override
+  public final ChannelPipeline remove(ChannelHandler handler) {
+    remove(getContextOrDie(handler));
+    return this;
+  }
+
+  private AbstractChannelHandlerContext remove(final AbstractChannelHandlerContext ctx) {
+    assert ctx != head && ctx != tail;
+    synchronized (this) {
+      remove0(ctx);
+      return ctx;
+    }
+  }
+
+  private static void remove0(AbstractChannelHandlerContext ctx) {
+    AbstractChannelHandlerContext prev = ctx.prev;
+    AbstractChannelHandlerContext next = ctx.next;
+    prev.next = next;
+    next.prev = prev;
+  }
+
+  private AbstractChannelHandlerContext getContextOrDie(ChannelHandler handler) {
+    AbstractChannelHandlerContext ctx = (AbstractChannelHandlerContext) context(handler);
+    if (ctx == null) {
+      throw new NoSuchElementException(handler.getClass().getName());
+    } else {
+      return ctx;
+    }
+  }
+
+  private int checkChannelHandlers(ChannelHandler... handlers) {
+    if (handlers == null) {
+      throw new NullPointerException("handlers");
+    }
+    if (handlers.length == 0 || handlers[0] == null) {
+      return 0;
+    }
+    int size;
+    for (size = 1; size < handlers.length; size++) {
+      if (handlers[size] == null) {
+        break;
+      }
+    }
+    return size;
+  }
+
+  /**
    * 将职责链转化为有序的 map，key为名称，value 为 handler
    *
    * @return Map<String, ChannelHandler>
    */
   @Override
   public Map<String, ChannelHandler> toMap() {
-    Map<String, ChannelHandler> map = new LinkedHashMap<String, ChannelHandler>();
+    Map<String, ChannelHandler> map = new LinkedHashMap<>();
     AbstractChannelHandlerContext ctx = head.next;
     for (; ; ) {
       if (ctx == tail) {
@@ -80,6 +181,22 @@ public class DefaultChannelPipeline implements ChannelPipeline {
       map.put(ctx.name(), ctx.handler());
       ctx = ctx.next;
     }
+  }
+
+  /**
+   * Returns the {@link Channel} that this pipeline is attached to.
+   *
+   * @return the channel. {@code null} if this pipeline is not attached yet.
+   */
+  @Override
+  public Channel channel() {
+    return channel;
+  }
+
+  @Override
+  public ChannelInboundInvoker initalizer() {
+    AbstractChannelHandlerContext.invokeChannelInitalizer(head);
+    return this;
   }
 
   /**
@@ -323,7 +440,7 @@ public class DefaultChannelPipeline implements ChannelPipeline {
   }
 
 
-  final class HeadContext extends AbstractChannelHandlerContext
+  static final class HeadContext extends AbstractChannelHandlerContext
       implements ChannelInboundHandler, ChannelOutboundHandler {
 
     HeadContext(DefaultChannelPipeline pipeline) {
@@ -336,140 +453,125 @@ public class DefaultChannelPipeline implements ChannelPipeline {
     }
 
     @Override
-    public void channelBeforeAll(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelBeforeAll()");
+    public void channelInitalizer(ChannelHandlerContext ctx) {
+      ctx.initalizer();
+    }
+
+    @Override
+    public void channelBeforeAll(ChannelHandlerContext ctx) {
       ctx.beforeAll();
     }
 
     @Override
-    public void channelBeforeAssemble(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelBeforeAssemble()");
+    public void channelBeforeAssemble(ChannelHandlerContext ctx) {
       if (ctx != null) {
         ctx.beforeAssemble();
       }
     }
 
     @Override
-    public void channelAssemble(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelAssemble()");
+    public void channelAssemble(ChannelHandlerContext ctx) {
       ctx.assemble();
     }
 
     @Override
-    public void channelAfterAssemble(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelAfterAssemble()");
+    public void channelAfterAssemble(ChannelHandlerContext ctx) {
       ctx.afterAssemble();
     }
 
     @Override
-    public void channelBeforeRequest(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelBeforeRequest()");
+    public void channelBeforeRequest(ChannelHandlerContext ctx) {
       ctx.beforeRequest();
     }
 
     @Override
-    public void channelRequest(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelRequest()");
+    public void channelRequest(ChannelHandlerContext ctx) {
       ctx.request();
     }
 
     @Override
-    public void channelAfterRequest(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelAfterRequest()");
+    public void channelAfterRequest(ChannelHandlerContext ctx) {
       ctx.afterRequest();
     }
 
     @Override
-    public void channelBeforeRemould(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelBeforeRemould()");
+    public void channelBeforeRemould(ChannelHandlerContext ctx) {
       ctx.beforeRemould();
     }
 
     @Override
-    public void channelRemould(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelRemould()");
+    public void channelRemould(ChannelHandlerContext ctx) {
       ctx.remould();
     }
 
     @Override
-    public void channelAfterRemould(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelAfterRemould()");
+    public void channelAfterRemould(ChannelHandlerContext ctx) {
       ctx.afterRemould();
     }
 
     @Override
-    public void channelAfterAll(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelAfterAll()");
+    public void channelAfterAll(ChannelHandlerContext ctx) {
       ctx.afterAll();
     }
 
     @Override
-    public void channelBeforeAllOutBound(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelBeforeAllOutBound()");
+    public void channelBeforeAllOutBound(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelBeforeAssembleOutBound(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelBeforeAssembleOutBound()");
-
+    public void channelBeforeAssembleOutBound(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelAssembleOutBound(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelAssembleOutBound()");
-
+    public void channelAssembleOutBound(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelAfterAssembleOutBound(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelAfterAssembleOutBound()");
-
+    public void channelAfterAssembleOutBound(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelBeforeRequestOutBound(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelBeforeRequestOutBound()");
-
+    public void channelBeforeRequestOutBound(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelRequestOutBound(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelRequestOutBound()");
-
+    public void channelRequestOutBound(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelAfterRequestOutBound(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelAfterRequestOutBound()");
-
+    public void channelAfterRequestOutBound(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelBeforeRemouldOutBound(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelBeforeRemouldOutBound()");
-
+    public void channelBeforeRemouldOutBound(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelRemouldOutBound(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelRemouldOutBound()");
-
+    public void channelRemouldOutBound(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelAfterRemouldOutBound(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelAfterRemouldOutBound()");
-
+    public void channelAfterRemouldOutBound(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelAfterAllOutBound(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("ctx.channelAfterAllOutBound()");
-
+    public void channelAfterAllOutBound(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
   }
 
-  final class TailContext extends AbstractChannelHandlerContext implements ChannelInboundHandler {
+  static final class TailContext extends AbstractChannelHandlerContext implements
+      ChannelInboundHandler {
 
     TailContext(DefaultChannelPipeline pipeline) {
       super("TAIL_NAME", true, false, pipeline);
@@ -480,60 +582,64 @@ public class DefaultChannelPipeline implements ChannelPipeline {
       return this;
     }
 
-
     @Override
-    public void channelBeforeAll(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("末尾:ctx.channelBeforeAll()");
+    public void channelInitalizer(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelBeforeAssemble(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("末尾:ctx.channelBeforeAssemble()");
+    public void channelBeforeAll(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelAssemble(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("末尾:ctx.channelAssemble()");
+    public void channelBeforeAssemble(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelAfterAssemble(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("末尾:ctx.channelAfterAssemble()");
+    public void channelAssemble(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelBeforeRequest(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("末尾:ctx.channelBeforeRequest()");
+    public void channelAfterAssemble(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelRequest(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("末尾:ctx.channelRequest()");
+    public void channelBeforeRequest(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelAfterRequest(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("末尾:ctx.channelAfterRequest()");
+    public void channelRequest(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelBeforeRemould(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("末尾:ctx.channelBeforeRemould()");
+    public void channelAfterRequest(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelRemould(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("末尾:ctx.channelRemould()");
+    public void channelBeforeRemould(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelAfterRemould(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("末尾:ctx.channelAfterRemould()");
+    public void channelRemould(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
     @Override
-    public void channelAfterAll(ChannelHandlerContext ctx) throws Exception {
-      System.out.println("末尾:ctx.channelAfterAll()");
+    public void channelAfterRemould(ChannelHandlerContext ctx) {
+      //No need to deal with
+    }
+
+    @Override
+    public void channelAfterAll(ChannelHandlerContext ctx) {
+      //No need to deal with
     }
 
   }

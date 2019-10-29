@@ -17,7 +17,6 @@ package demo.netty.pipeline.util.internal;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility that detects various properties specific to the current runtime environment, such as Java

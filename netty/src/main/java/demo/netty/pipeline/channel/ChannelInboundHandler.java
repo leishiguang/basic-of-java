@@ -8,6 +8,8 @@ package demo.netty.pipeline.channel;
  */
 public interface ChannelInboundHandler extends ChannelHandler {
 
+  void channelInitalizer(ChannelHandlerContext ctx) throws Exception;
+
   void channelBeforeAll(ChannelHandlerContext ctx) throws Exception;
 
   void channelBeforeAssemble(ChannelHandlerContext ctx) throws Exception;

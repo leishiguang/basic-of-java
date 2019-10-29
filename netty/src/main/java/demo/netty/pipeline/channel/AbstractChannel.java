@@ -1,35 +1,37 @@
 package demo.netty.pipeline.channel;
 
-
 import demo.netty.pipeline.util.DefaultAttributeMap;
+import java.util.UUID;
 
 /**
- * todo: DESCRIPTION
+ * {@link Channel} 的一个抽象实现
  *
  * @author leishiguang
  * @since v1.0
  */
-public class AbstractChannel extends DefaultAttributeMap implements Channel {
+public abstract class AbstractChannel extends DefaultAttributeMap implements Channel {
 
-  private final String id;
-  private final DefaultChannelPipeline pipeline;
-  private final ChannelConfig config;
+  protected final String id;
+  protected final DefaultChannelPipeline pipeline;
+
 
   protected AbstractChannel() {
-    id = "AbstractChannel通道id";
+    id = newId();
     pipeline = newChannelPipeline();
-    config = newChannelConfig();
   }
 
   /**
-   * 生成通道 id
+   * 生成通道职责链
    */
   protected DefaultChannelPipeline newChannelPipeline() {
     return new DefaultChannelPipeline(this);
   }
 
-  protected DefaultChannelConfig newChannelConfig() {
-    return new DefaultChannelConfig(this);
+  /**
+   * 生成通道ID
+   */
+  protected String newId() {
+    return UUID.randomUUID().toString();
   }
 
   /**
@@ -42,15 +44,6 @@ public class AbstractChannel extends DefaultAttributeMap implements Channel {
     return id;
   }
 
-  /**
-   * 返回当前通道的配置信息
-   *
-   * @return ChannelConfig 通道配置
-   */
-  @Override
-  public ChannelConfig config() {
-    return config;
-  }
 
   /**
    * 获取当前通道的 pipeline
@@ -62,40 +55,5 @@ public class AbstractChannel extends DefaultAttributeMap implements Channel {
     return pipeline;
   }
 
-  /**
-   * 执行通道的事件
-   *
-   * @return
-   */
-  @Override
-  public Channel invokeInbound() {
-    pipeline.beforeAll();
-    pipeline.beforeAssemble();
-    pipeline.assemble();
-    pipeline.afterAssemble();
-    pipeline.beforeRequest();
-    pipeline.request();
-    pipeline.afterRequest();
-    pipeline.beforeRemould();
-    pipeline.remould();
-    pipeline.afterRemould();
-    pipeline.afterAll();
-    return this;
-  }
 
-  @Override
-  public Channel invokeOutbound() {
-    pipeline.beforeAllOutBound();
-    pipeline.beforeAssembleOutBound();
-    pipeline.assembleOutBound();
-    pipeline.afterAssembleOutBound();
-    pipeline.beforeRequestOutBound();
-    pipeline.requestOutBound();
-    pipeline.afterRequestOutBound();
-    pipeline.beforeRemouldOutBound();
-    pipeline.remouldOutBound();
-    pipeline.afterRemouldOutBound();
-    pipeline.afterAllOutBound();
-    return this;
-  }
 }

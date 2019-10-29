@@ -8,6 +8,8 @@ package demo.netty.pipeline.channel;
  */
 public interface ChannelInboundInvoker {
 
+  ChannelInboundInvoker initalizer();
+
   /**
    * 入站前的请求编码
    */
