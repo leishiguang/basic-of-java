@@ -18,9 +18,13 @@ package demo.leetcode.easy.dp;
  */
 public class MaxProfit {
 
+  /**
+   * 记录 n-1 天的最低价格，以及最高盈利。新价格出现的时候，重置历史记录。
+   */
   public int maxProfit(int[] prices) {
     int winMax = 0;
     int buyMin = Integer.MAX_VALUE;
+    // 新的一天，新的价格出现后，判断该价格是不是历史新低，盈利是否历史新高
     for (int price : prices) {
       if (price < buyMin) {
         buyMin = price;
