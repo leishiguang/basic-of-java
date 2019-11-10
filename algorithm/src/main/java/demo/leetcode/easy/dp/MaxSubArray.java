@@ -22,17 +22,29 @@ public class MaxSubArray {
     //求解 nums 的最大和，就变成了求解dp数组的最大值
     int[] dp = new int[nums.length];
     dp[0] = nums[0];
+    int max = dp[0];
     //构建dp数组，设定了dp[i]必须是A[i]结尾，于是就只有两种情况：1、只有A[i]一个数，2、dp[i-1]+A[i]
     //那么，dp[i]的值就是1和2的最大值；
     for (int i = 1; i < nums.length; i++) {
       dp[i] = Math.max(dp[i - 1] + nums[i], nums[i]);
-    }
-    int max = Integer.MIN_VALUE;
-    for (int tmp : dp) {
-      if (tmp > max) {
-        max = tmp;
-      }
+      //获取dp数组的最大值
+      max = Math.max(dp[i], max);
     }
     return max;
+  }
+
+  /**
+   * 通过优化，取消dp数组
+   */
+  public int maxSubArray2(int[] nums) {
+    if (nums.length == 0) {
+      return 0;
+    }
+    int maxSum = nums[0], pre = nums[0];
+    for (int i = 1; i < nums.length; i++) {
+      pre = Math.max(pre + nums[i], nums[i]);
+      maxSum = Math.max(pre, maxSum);
+    }
+    return maxSum;
   }
 }
