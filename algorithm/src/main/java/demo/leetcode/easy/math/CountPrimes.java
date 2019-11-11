@@ -8,6 +8,11 @@ package demo.leetcode.easy.math;
  * <p>
  * 输入: 10 输出: 4 解释: 小于 10 的质数一共有 4 个, 它们是 2, 3, 5, 7 。
  *
+ * 还有许多的优化，可参考：https://leetcode-cn.com/problems/count-primes/solution/ji-shu-zhi-shu-bao-li-fa-ji-you-hua-shai-fa-ji-you/
+ * 比如：
+ * 1. 用 bitMap 优化空间占用
+ * 2. 每次循环增加2，快速过滤掉偶数，减少循环次数
+ *
  * @author leishiguang
  * @since v1.0
  */
@@ -21,12 +26,12 @@ public class CountPrimes {
   public int countPrimes(int n) {
     boolean[] notPrime = new boolean[n];
     int count = 0;
-    for (int i = 2; i < n; i++) {
+    for (int i = 2; i < n; i ++) {
       //判断是否在notPrime表中，再判断是否是素质
-      if(!notPrime[i] && isPrime(i)){
+      if (!notPrime[i] && isPrime(i)) {
         //把i倍位置，都置为true
-        setNotPrime(notPrime,i);
-        count ++;
+        setNotPrime(notPrime, i);
+        count++;
       }
     }
     return count;
@@ -41,9 +46,9 @@ public class CountPrimes {
     return true;
   }
 
-  public void setNotPrime(boolean[] notPrime, int x){
+  public void setNotPrime(boolean[] notPrime, int x) {
     int index = x;
-    while (index < notPrime.length){
+    while (index < notPrime.length) {
       notPrime[x] = true;
       index += x;
     }
