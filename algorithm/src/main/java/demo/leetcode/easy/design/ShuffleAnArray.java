@@ -14,6 +14,8 @@ import java.util.Random;
  * // 重设数组到它的初始状态[1,2,3]。 solution.reset();
  * <p>
  * // 随机返回数组[1,2,3]打乱后的结果。 solution.shuffle();
+ * <p>
+ * tips：洗牌算法还有：1、Fisher-Yates Shuffle算法，2、Knuth-Durstenfeld Shuffle算法
  *
  * @author leishiguang
  * @since v1.0
@@ -24,11 +26,13 @@ public class ShuffleAnArray {
   private Node head;
 
   /**
-   * 构建循环链表
+   * 构建链表
    */
   class Node {
+
     int num;
     Node next;
+
     public Node(int num) {
       this.num = num;
     }
