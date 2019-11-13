@@ -1,5 +1,7 @@
 package demo.leetcode.easy.design;
 
+import javax.swing.CellRendererPane;
+
 /**
  * 最小栈，https://leetcode-cn.com/explore/interview/card/top-interview-questions-easy/24/design/59/
  * 设计一个支持 push，pop，top 操作，并能在常数时间内检索到最小元素的栈。
@@ -11,17 +13,13 @@ package demo.leetcode.easy.design;
  */
 public class MinStack {
 
-  Node head;
-  Node tail;
-  int count;
-
-  class Node {
-
-    int num;
+  private Node first;
+  private Node min;
+  private static class Node {
+    int val;
     Node next;
-
-    Node(int num) {
-      this.num = num;
+    Node(int val) {
+      this.val = val;
     }
   }
 
@@ -29,40 +27,49 @@ public class MinStack {
    * initialize your data structure here.
    */
   public MinStack() {
-    head = new Node(0);
-    tail = new Node(0);
-    head.next = tail;
-    count = 0;
+
   }
 
   public void push(int x) {
     Node node = new Node(x);
-    node.next = head.next;
-    head.next = node;
-    count++;
+    node.next = first;
+    first = node;
+    if(min == null){
+      min = first;
+    }else{
+      if(first.val < min.val){
+        min = first;
+      }
+    }
   }
 
   public void pop() {
-    if (count > 0) {
-      head.next = head.next.next;
-      count--;
+    if(first == null){
+      return;
+    }
+    Node oldFirst = first;
+    first = oldFirst.next;
+    if(oldFirst == min){
+      min = first;
+      Node cur = first;
+      while (cur != null){
+        if(cur.val < min.val){
+          min = cur;
+        }
+        cur = cur.next;
+      }
     }
   }
 
   public int top() {
-    int value = head.next.num;
-    //pop();
-    return value;
+    return first.val;
   }
 
   public int getMin() {
-    int min = Integer.MAX_VALUE;
-    Node cur = head.next;
-    for (int i = 0; i < count; i++) {
-      min = Math.min(cur.num, min);
-      cur = cur.next;
+    if(min == null){
+      return 0;
     }
-    return min;
+    return min.val;
   }
 
   public static void main(String[] args) {
