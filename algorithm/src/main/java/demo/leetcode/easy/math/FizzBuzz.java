@@ -21,6 +21,10 @@ import java.util.Map;
  */
 public class FizzBuzz {
 
+  /**
+   * 首先生成两个 n 数组，标记数组中，是否被 3 整除。
+   * 有点儿多此一举...不建议这么弄
+   */
   public List<String> fizzBuzz(int n) {
     List<String> result = new ArrayList<>();
     String isThree = "Fizz";
@@ -56,6 +60,9 @@ public class FizzBuzz {
     return result;
   }
 
+  /**
+   * 使用 map 表达了被整除时候要转换的字符串。这样的话就可以很方便的添加其它除数
+   */
   public List<String> fizzBuzz2(int n) {
     Map<Integer, String> map = new HashMap<Integer, String>() {
       {
