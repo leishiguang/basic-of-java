@@ -1,10 +1,9 @@
 package demo.netty.pipeline.channel;
 
-import com.sun.javafx.binding.StringFormatter;
-
 import demo.netty.pipeline.util.AttributeKey;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 通道初始化的引导
@@ -12,6 +11,7 @@ import java.util.Map;
  * @author leishiguang
  * @since v1.0
  */
+@Slf4j
 public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C extends Channel> {
 
   private volatile ChannelFactory<? extends C> channelFactory;
@@ -117,11 +117,12 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
     try {
       channel = channelFactory.newChannel();
       init(channel);
+      //校验初始化的状态
+      verify(channel);
       //发布通道初始化的事件
       channel.pipeline().initalizer();
     } catch (Throwable t) {
-      System.err.println("初始化失败");
-      t.printStackTrace();
+      log.error("初始化失败", t);
     }
     return channel;
   }
@@ -138,13 +139,12 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
       Channel channel, ChannelOption<?> option, Object value) {
     try {
       if (!channel.config().setOption((ChannelOption<Object>) option, value)) {
-        System.out.println(StringFormatter.format("Unknown channel option '{}' for channel '{}'", option, channel));
+        log.warn("Unknown channel option '{}' for channel '{}'", option, channel);
       }
     } catch (Throwable t) {
-      System.out.println(StringFormatter.format(
+      log.warn(
           "Failed to set channel option '{}' with value '{}' for channel '{}'", option, value,
-          channel));
-      t.printStackTrace();
+          channel, t);
     }
   }
 
@@ -161,4 +161,7 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
   }
 
   abstract void init(Channel channel) throws Exception;
+
+  abstract void verify(Channel channel) throws Exception;
+
 }

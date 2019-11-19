@@ -5,7 +5,7 @@ package demo.netty.pipeline.channel;
  * ChannelOutboundHandler}； 如果新处理器即要支持出站，也要支持入站，则可以继承这个；
  *
  * <pre>
- *   public class LogDuplexHandler extends SimpleChannelDuplexHandler {
+ * public class LogDuplexHandler extends SimpleChannelDuplexHandler {
  *
  *   public void channelBeforeAll(ChannelHandlerContext ctx) throws Exception {
  *     System.out.println("入站：在全部开始之前，记录日志");
@@ -16,7 +16,6 @@ package demo.netty.pipeline.channel;
  *     System.out.println("出站：在全部开始之前，记录日志");
  *     ctx.beforeAllOutBound();
  *   }
- *
  * }
  * </pre>
  *

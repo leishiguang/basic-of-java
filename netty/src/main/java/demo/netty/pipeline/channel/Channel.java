@@ -1,6 +1,5 @@
 package demo.netty.pipeline.channel;
 
-
 import demo.netty.pipeline.util.AttributeMap;
 
 /**
@@ -52,13 +51,24 @@ public interface Channel extends AttributeMap {
   ChannelPipeline pipeline();
 
   /**
-   * 接收到了外部数据，比如接收到第三方的查询请求
+   * 是否在运行中
+   *
    */
-  Channel receivedOutside();
+  boolean isActive();
 
   /**
-   * 要通知外部，比如将进度数据发送给外部
+   * 停止职责链处理
    */
-  Channel sendOut();
+  void stop();
 
+  /**
+   * 获取当前通道存储的异常
+   */
+  Throwable throwable();
+
+  /**
+   * 往通道中存储异常
+   * @param throwable
+   */
+  void throwable(Throwable throwable);
 }

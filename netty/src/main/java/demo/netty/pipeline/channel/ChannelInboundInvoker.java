@@ -8,7 +8,15 @@ package demo.netty.pipeline.channel;
  */
 public interface ChannelInboundInvoker {
 
+  /**
+   * 通道初始化
+   */
   ChannelInboundInvoker initalizer();
+
+  /**
+   * 通道异常
+   */
+  ChannelInboundInvoker fireExceptionCaught(Throwable cause);
 
   /**
    * 入站前的请求编码

@@ -17,6 +17,11 @@ public class ChannelInboundHandlerAdapter extends AbstractChannelHandlerAdapter 
   }
 
   @Override
+  public void channelExceptionCaught(ChannelHandlerContext ctx, Throwable caugth) {
+    ctx.fireExceptionCaught(caugth);
+  }
+
+  @Override
   public void channelBeforeAll(ChannelHandlerContext ctx) throws Exception {
     ctx.beforeAll();
   }

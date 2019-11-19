@@ -1,11 +1,12 @@
 package demo.netty.pipeline.channel;
 
+
 import demo.netty.pipeline.util.AttributeKey;
 import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * todo: DESCRIPTION
+ * 通道的初始化，默认实现
  *
  * @author leishiguang
  * @since v1.0
@@ -31,6 +32,14 @@ public class SimpleBootstrap extends AbstractBootstrap<SimpleBootstrap, Channel>
         channel.attr((AttributeKey<Object>) e.getKey()).set(e.getValue());
       }
     }
+
+  }
+
+  /**
+   * todo 执行通道的校验，比如：必须设置的通道配置、参数
+   */
+  @Override
+  void verify(Channel channel) throws Exception {
 
   }
 }

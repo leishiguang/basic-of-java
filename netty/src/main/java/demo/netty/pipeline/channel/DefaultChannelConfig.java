@@ -2,8 +2,10 @@ package demo.netty.pipeline.channel;
 
 
 import static demo.netty.pipeline.channel.ChannelOption.CHANNEL_ID;
+import static demo.netty.pipeline.channel.ChannelOption.CHANNEL_MODE;
 import static demo.netty.pipeline.channel.ChannelOption.CHANNEL_NAME;
 
+import demo.netty.pipeline.channel.ChannelOption.ChannelMode;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -19,6 +21,7 @@ public class DefaultChannelConfig implements ChannelConfig {
 
   protected volatile String channelName = "defaultChannelName";
   protected volatile String channelId = "defaultChannelId";
+  protected volatile ChannelMode channelMode;
 
   public DefaultChannelConfig(Channel channel) {
     this.channel = channel;
@@ -31,7 +34,7 @@ public class DefaultChannelConfig implements ChannelConfig {
    */
   @Override
   public Map<ChannelOption<?>, Object> getOptions() {
-    return getOptions(null, CHANNEL_NAME, CHANNEL_ID);
+    return getOptions(null, CHANNEL_NAME, CHANNEL_ID, CHANNEL_MODE);
   }
 
   protected Map<ChannelOption<?>, Object> getOptions(
@@ -62,6 +65,9 @@ public class DefaultChannelConfig implements ChannelConfig {
     if (option == CHANNEL_ID) {
       return (T) channelId;
     }
+    if (option == CHANNEL_MODE) {
+      return (T) channelMode;
+    }
     return null;
   }
 
@@ -76,6 +82,8 @@ public class DefaultChannelConfig implements ChannelConfig {
       channelName = (String) value;
     } else if (option == CHANNEL_ID) {
       channelId = (String) value;
+    } else if (option == CHANNEL_MODE) {
+      channelMode = (ChannelMode) value;
     } else {
       return false;
     }

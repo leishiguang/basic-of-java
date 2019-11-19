@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 默认的职责链
@@ -13,6 +14,7 @@ import java.util.NoSuchElementException;
  * @author leishiguang
  * @since v1.0
  */
+@Slf4j
 public class DefaultChannelPipeline implements ChannelPipeline {
 
   private final AbstractChannelHandlerContext head;
@@ -196,6 +198,12 @@ public class DefaultChannelPipeline implements ChannelPipeline {
   @Override
   public ChannelInboundInvoker initalizer() {
     AbstractChannelHandlerContext.invokeChannelInitalizer(head);
+    return this;
+  }
+
+  @Override
+  public ChannelInboundInvoker fireExceptionCaught(Throwable cause) {
+    AbstractChannelHandlerContext.invokeExceptionCaught(head, cause);
     return this;
   }
 
@@ -458,6 +466,11 @@ public class DefaultChannelPipeline implements ChannelPipeline {
     }
 
     @Override
+    public void channelExceptionCaught(ChannelHandlerContext ctx, Throwable caugth) {
+      ctx.fireExceptionCaught(caugth);
+    }
+
+    @Override
     public void channelBeforeAll(ChannelHandlerContext ctx) {
       ctx.beforeAll();
     }
@@ -568,9 +581,10 @@ public class DefaultChannelPipeline implements ChannelPipeline {
     public void channelAfterAllOutBound(ChannelHandlerContext ctx) {
       //No need to deal with
     }
+
   }
 
-  static final class TailContext extends AbstractChannelHandlerContext implements
+  final class TailContext extends AbstractChannelHandlerContext implements
       ChannelInboundHandler {
 
     TailContext(DefaultChannelPipeline pipeline) {
@@ -585,6 +599,12 @@ public class DefaultChannelPipeline implements ChannelPipeline {
     @Override
     public void channelInitalizer(ChannelHandlerContext ctx) {
       //No need to deal with
+    }
+
+    @Override
+    public void channelExceptionCaught(ChannelHandlerContext ctx, Throwable caugth) {
+      //将异常抛出到外层，之后无需再次处理
+      onUnhandledInboundException(caugth);
     }
 
     @Override
@@ -644,4 +664,10 @@ public class DefaultChannelPipeline implements ChannelPipeline {
 
   }
 
+  protected void onUnhandledInboundException(Throwable cause) {
+    log.warn(
+        "An exceptionCaught() event was fired, and it reached at the tail of the pipeline. " +
+            "It usually means the last handler in the pipeline did not handle the exception.",
+        cause);
+  }
 }

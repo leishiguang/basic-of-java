@@ -10,6 +10,19 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <slf4j.version>1.7.28</slf4j.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <artifactId>netty</artifactId>
 
 </project>

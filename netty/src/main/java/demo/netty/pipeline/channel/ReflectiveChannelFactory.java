@@ -1,6 +1,5 @@
 package demo.netty.pipeline.channel;
 
-
 import demo.netty.pipeline.util.internal.StringUtil;
 
 /**

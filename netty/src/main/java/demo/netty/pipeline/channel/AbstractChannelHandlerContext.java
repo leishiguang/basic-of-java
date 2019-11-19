@@ -1,16 +1,18 @@
 package demo.netty.pipeline.channel;
 
-
-import demo.netty.pipeline.util.DefaultAttributeMap;
-import org.omg.SendingContext.RunTime;
+import demo.netty.pipeline.util.Attribute;
+import demo.netty.pipeline.util.AttributeKey;
 
 /**
- * todo: DESCRIPTION
+ * 抽象的{@link ChannelHandlerContext}实现，用于管理{@link Channel}中的事件 比如，发布一个注册事件{@link
+ * ChannelInboundInvoker#initalizer()}，对应的出站入站职责链事件会被依次触发
+ * <p>
+ * 入站事件时，顺序为从Head到Tail。出站事件时，顺序为从Tail到Head
  *
  * @author leishiguang
  * @since v1.0
  */
-public abstract class AbstractChannelHandlerContext extends DefaultAttributeMap implements
+public abstract class AbstractChannelHandlerContext implements
     ChannelHandlerContext {
 
   volatile AbstractChannelHandlerContext next;
@@ -20,7 +22,7 @@ public abstract class AbstractChannelHandlerContext extends DefaultAttributeMap 
   private final boolean outbound;
   private final DefaultChannelPipeline pipeline;
 
-  public AbstractChannelHandlerContext(String name, boolean inbound, boolean outbound,
+  AbstractChannelHandlerContext(String name, boolean inbound, boolean outbound,
       DefaultChannelPipeline pipeline) {
     this.name = name;
     this.inbound = inbound;
@@ -47,6 +49,22 @@ public abstract class AbstractChannelHandlerContext extends DefaultAttributeMap 
   }
 
   /**
+   * 和{@link Channel#attr(AttributeKey)}一样
+   */
+  @Override
+  public <T> Attribute<T> attr(AttributeKey<T> key) {
+    return channel().attr(key);
+  }
+
+  /**
+   * 和{@link Channel#hasAttr(AttributeKey)}一样
+   */
+  @Override
+  public <T> boolean hasAttr(AttributeKey<T> key) {
+    return channel().hasAttr(key);
+  }
+
+  /**
    * Return the assigned {@link ChannelPipeline}
    */
   @Override
@@ -70,6 +88,32 @@ public abstract class AbstractChannelHandlerContext extends DefaultAttributeMap 
     } catch (Throwable t) {
       notifyHandlerException(t);
     }
+  }
+
+
+  @Override
+  public ChannelInboundInvoker fireExceptionCaught(Throwable cause) {
+    invokeExceptionCaught(next, cause);
+    return this;
+  }
+
+  static void invokeExceptionCaught(final AbstractChannelHandlerContext next, Throwable cause) {
+    if (next != null) {
+      next.invokeExceptionCaught(cause);
+    }
+  }
+
+  private void invokeExceptionCaught(Throwable cause) {
+    //todo 实现当前ctx的异常处理处理方法
+    if (invokeHandler()) {
+    } else {
+      //否则发布给下一个处理
+      ((ChannelInboundHandler) handler()).channelExceptionCaught(this, cause);
+    }
+  }
+
+  private boolean invokeHandler() {
+    return false;
   }
 
   @Override
@@ -513,8 +557,11 @@ public abstract class AbstractChannelHandlerContext extends DefaultAttributeMap 
     return ctx;
   }
 
-
+  /**
+   * 通道中出现异常了处理，如果未配置统一异常处理，则发布异常事件，执行所有handler的异常之后终止当前通道
+   */
   private void notifyHandlerException(Throwable t) {
-    throw new RuntimeException(t.getMessage(), t);
+    invokeExceptionCaught(t);
+    //throw new ChannelException(t.getMessage(), t);
   }
 }

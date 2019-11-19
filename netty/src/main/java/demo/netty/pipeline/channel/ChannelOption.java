@@ -1,6 +1,5 @@
 package demo.netty.pipeline.channel;
 
-
 import demo.netty.pipeline.util.AbstractConstant;
 import demo.netty.pipeline.util.ConstantPool;
 
@@ -63,4 +62,15 @@ public class ChannelOption<T> extends AbstractConstant<ChannelOption<T>> {
 
   public static final ChannelOption<String> CHANNEL_NAME = valueOf("channelName");
   public static final ChannelOption<String> CHANNEL_ID = valueOf("channelId");
+  public static final ChannelOption<ChannelMode> CHANNEL_MODE = valueOf("channelMode");
+
+  /**
+   * 通道的运作模式，如：接收外部请求、向外部发送请求
+   */
+  public enum ChannelMode{
+    /*接收外部请求*/
+    RECEIVED,
+    /*发送通知*/
+    SEND_OUT;
+  }
 }

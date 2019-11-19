@@ -10,6 +10,8 @@ public interface ChannelInboundHandler extends ChannelHandler {
 
   void channelInitalizer(ChannelHandlerContext ctx) throws Exception;
 
+  void channelExceptionCaught(ChannelHandlerContext ctx, Throwable caugth);
+
   void channelBeforeAll(ChannelHandlerContext ctx) throws Exception;
 
   void channelBeforeAssemble(ChannelHandlerContext ctx) throws Exception;

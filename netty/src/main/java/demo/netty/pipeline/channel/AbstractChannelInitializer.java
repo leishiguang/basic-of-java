@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author leishiguang
  * @since v1.0
  */
+@Slf4j
 public abstract class AbstractChannelInitializer<C extends Channel> extends
     ChannelInboundHandlerAdapter {
 
@@ -30,8 +31,7 @@ public abstract class AbstractChannelInitializer<C extends Channel> extends
       try {// Tony: 这个init方法一般就是创建channel时，实现的那个initchannel方法
         initChannel((C) ctx.channel());
       } catch (Throwable cause) {
-        System.err.println("未完成职责链的初始化");
-        cause.printStackTrace();
+        log.error("未完成职责链的初始化", cause);
       } finally {// Tony: ChannelInitializer执行结束之后，会把自己从pipeline中删除掉，避免重复初始化
         remove(ctx);
       }

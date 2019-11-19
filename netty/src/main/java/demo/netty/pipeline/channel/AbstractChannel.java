@@ -15,6 +15,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
   protected final DefaultChannelPipeline pipeline;
 
 
+
   protected AbstractChannel() {
     id = newId();
     pipeline = newChannelPipeline();
