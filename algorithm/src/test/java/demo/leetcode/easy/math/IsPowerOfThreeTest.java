@@ -43,6 +43,8 @@ public class IsPowerOfThreeTest {
     IsPowerOfThree isPowerOfThree = new IsPowerOfThree();
     for (int i = 0; i < cases.size(); i++) {
       assertEquals(results.get(i),isPowerOfThree.isPowerOfThree(cases.get(i)));
+      assertEquals(results.get(i),isPowerOfThree.isPowerOfThree2(cases.get(i)));
+      assertEquals(results.get(i),isPowerOfThree.isPowerOfThree3(cases.get(i)));
     }
   }
 }
