@@ -228,7 +228,7 @@ public class StringPractice {
    * <p>
    * 输出描述：数据输出n行，输出结果为按照字典序排列的字符串。
    */
-  public static void main(String[] args) {
+  public static void main8(String[] args) {
     Scanner sc = new Scanner(System.in);
     while (sc.hasNext()) {
       int lines = Integer.parseInt(sc.nextLine());
@@ -242,4 +242,108 @@ public class StringPractice {
       }
     }
   }
+
+  /**
+   * 题目描述: 实现删除字符串中出现次数最少的字符，若多个字符出现次数一样，则都删除。输出删除这些单词后的字符串，字符串中其它字符保持原来的顺序。
+   * <p>
+   * 输入描述: 字符串只包含小写英文字母, 不考虑非法输入，输入的字符串长度小于等于20个字节。
+   * <p>
+   * 输出描述: 删除字符串中出现次数最少的字符后的字符串。
+   */
+  public static void main9(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      deleteMinChar(sc.nextLine());
+    }
+  }
+
+  private static void deleteMinChar(String str) {
+    if (str.length() > 20) {
+      return;
+    }
+    int[] sums = new int[26];
+    int min = Integer.MAX_VALUE;
+    for (char c : str.toCharArray()) {
+      int index = c - 'a';
+      sums[index] += 1;
+      min = Math.min(min, sums[index]);
+    }
+    for (int i = 0; i < sums.length; i++) {
+      if (min == sums[i]) {
+        str = str.replaceAll(String.valueOf((char) (i + 'a')), "");
+      }
+    }
+    System.out.println(str);
+  }
+
+  /**
+   * 密码破解，字符串按规则替换
+   */
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      replaceString(sc.nextLine());
+    }
+  }
+
+  private static void replaceString(String str){
+    StringBuilder result = new StringBuilder();
+    for(char c:str.toCharArray()){
+      if(Character.isDigit(c)){
+        result.append(c);
+      }else if(Character.isLowerCase(c)){
+        result.append(replaceStringLowerCase(c));
+      }else if(Character.isUpperCase(c)){
+        result.append(replaceStringUpcaseCase(c));
+      }
+    }
+    System.out.println(result);
+  }
+
+  private static String replaceStringLowerCase(char c){
+    switch (c){
+      case 'a':
+      case 'b':
+      case 'c':
+        return "2";
+      case 'd':
+      case 'e':
+      case 'f':
+        return "3";
+      case 'g':
+      case 'h':
+      case 'i':
+        return "4";
+      case 'j':
+      case 'k':
+      case 'l':
+        return "5";
+      case 'm':
+      case 'n':
+      case 'o':
+        return "6";
+      case 'p':
+      case 'q':
+      case 'r':
+      case 's':
+        return "7";
+      case 't':
+      case 'u':
+      case 'v':
+        return "8";
+      case 'w':
+      case 'x':
+      case 'y':
+      case 'z':
+        return "9";
+      default:
+        return "";
+    }
+  }
+
+  private static String replaceStringUpcaseCase(char c){
+    c = Character.toLowerCase(c);
+    return c == 'z' ? "a" : String.valueOf((char) (c + 1));
+  }
+
 }
