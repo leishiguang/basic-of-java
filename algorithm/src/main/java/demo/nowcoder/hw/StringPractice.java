@@ -178,4 +178,68 @@ public class StringPractice {
     System.out.println(count);
   }
 
+  /**
+   * 题目描述 描述： 输入一个整数，将这个整数以字符串的形式逆序输出。 程序不考虑负数的情况，若数字含有0，则逆序形式也含有0，如输入为100，则输出为001
+   * <p>
+   * 输入描述: 输入一个int整数
+   * <p>
+   * 输出描述: 将这个整数以字符串的形式逆序输出
+   */
+  public static void main6(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      revertInt(sc.nextLine());
+    }
+  }
+
+
+  private static void revertInt(String str) {
+    StringBuilder result = new StringBuilder();
+    char[] chars = str.toCharArray();
+    for (int i = str.length() - 1; i >= 0; i--) {
+      result.append(chars[i]);
+    }
+    System.out.println(result.toString());
+  }
+
+  /**
+   * 题目描述： 将一个英文语句以单词为单位逆序排放。例如“I am a boy”，逆序排放后为“boy a am I” 所有单词之间用一个空格隔开，语句中除了英文字母外，不再包含其他字符
+   */
+  public static void main7(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      revertLetters(sc.nextLine());
+    }
+  }
+
+  private static void revertLetters(String str) {
+    String[] strArrays = str.split(" ");
+    StringBuilder stringBuilder = new StringBuilder();
+    for (int i = strArrays.length - 1; i >= 0; i--) {
+      stringBuilder.append(strArrays[i]).append(" ");
+    }
+    System.out.println(stringBuilder.substring(0, stringBuilder.length() - 1));
+  }
+
+  /**
+   * 题目描述：给定n个字符串，请对n个字符串按照字典序排列。
+   * <p>
+   * 输入描述：输入第一行为一个正整数n(1≤n≤1000),下面n行为n个字符串(字符串长度≤100),字符串中只含有大小写字母。
+   * <p>
+   * 输出描述：数据输出n行，输出结果为按照字典序排列的字符串。
+   */
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      int lines = Integer.parseInt(sc.nextLine());
+      List<String> strs = new ArrayList<>();
+      while (--lines >= 0 && sc.hasNext()) {
+        strs.add(sc.nextLine());
+      }
+      Collections.sort(strs);
+      for (String str : strs) {
+        System.out.println(str);
+      }
+    }
+  }
 }
