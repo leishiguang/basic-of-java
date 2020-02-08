@@ -48,7 +48,7 @@ public class StackPractice {
    *
    * 说明：使用排序map的方法
    */
-  public static void main(String[] args) {
+  public static void main2(String[] args) {
     Scanner scanner = new Scanner(System.in);
     while (scanner.hasNext()) {
       int n = Integer.parseInt(scanner.nextLine());

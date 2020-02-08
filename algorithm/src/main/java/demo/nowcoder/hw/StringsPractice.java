@@ -361,7 +361,7 @@ public class StringsPractice {
    */
   public static void main11(String[] args) {
     Scanner scanner = new Scanner(System.in);
-    while(scanner.hasNext()){
+    while (scanner.hasNext()) {
       String pattern = scanner.nextLine();
       String str = scanner.hasNext() ? scanner.nextLine() : "";
       matchPattern(str, pattern);
@@ -372,6 +372,33 @@ public class StringsPractice {
     pattern = pattern.replaceAll("\\?", "[0-9a-zA-Z]");
     pattern = pattern.replaceAll("\\*", "[0-9a-zA-Z]*");
     System.out.println(str.matches(pattern));
+  }
+
+  /**
+   * 题目描述: 输入一个int型整数，按照从右向左的阅读顺序，返回一个不含重复数字的新的整数。
+   * <p>
+   * 输入描述: 输入一个int型整数，示例：9876673
+   * <p>
+   * 输出描述: 按照从右向左的阅读顺序，返回一个不含重复数字的新的整数，示例：37689
+   */
+  public static void main12(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while(sc.hasNext()){
+      revertAndReplace(sc.nextLine());
+    }
+  }
+
+  private static void revertAndReplace(String str){
+    boolean[] map = new boolean[10];
+    StringBuilder result = new StringBuilder();
+    for(int i = str.length() - 1; i >= 0 ; i --){
+      int num = str.charAt(i) - '0';
+      if(!map[num]){
+        map[num] = true;
+        result.append(num);
+      }
+    }
+    System.out.println(result);
   }
 
 }

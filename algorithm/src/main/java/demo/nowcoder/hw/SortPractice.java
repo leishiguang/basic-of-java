@@ -1,6 +1,6 @@
 package demo.nowcoder.hw;
 
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * 排序类算法练习
@@ -25,7 +25,7 @@ public class SortPractice {
    * <p>
    * 输出描述: 按照从小到大的顺序输出它的所有质数的因子，以空格隔开。最后一个数后面也要有空格。
    */
-  public static void main(String[] args) {
+  public static void main1(String[] args) {
     Scanner scanner = new Scanner(System.in);
     while (scanner.hasNext()){
       printPrime(scanner.nextLong());
