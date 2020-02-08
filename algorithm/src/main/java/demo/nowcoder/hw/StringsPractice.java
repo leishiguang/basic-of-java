@@ -1,6 +1,7 @@
 package demo.nowcoder.hw;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * 字符串类的算法
@@ -8,7 +9,7 @@ import java.util.*;
  * @author leishiguang
  * @since v1.0
  */
-public class StringPractice {
+public class StringsPractice {
 
   /**
    * 题目描述：计算字符串最后一个单词的长度，单词以空格隔开。
@@ -279,29 +280,29 @@ public class StringPractice {
   /**
    * 密码破解，字符串按规则替换
    */
-  public static void main(String[] args) {
+  public static void main10(String[] args) {
     Scanner sc = new Scanner(System.in);
     while (sc.hasNext()) {
       replaceString(sc.nextLine());
     }
   }
 
-  private static void replaceString(String str){
+  private static void replaceString(String str) {
     StringBuilder result = new StringBuilder();
-    for(char c:str.toCharArray()){
-      if(Character.isDigit(c)){
+    for (char c : str.toCharArray()) {
+      if (Character.isDigit(c)) {
         result.append(c);
-      }else if(Character.isLowerCase(c)){
+      } else if (Character.isLowerCase(c)) {
         result.append(replaceStringLowerCase(c));
-      }else if(Character.isUpperCase(c)){
+      } else if (Character.isUpperCase(c)) {
         result.append(replaceStringUpcaseCase(c));
       }
     }
     System.out.println(result);
   }
 
-  private static String replaceStringLowerCase(char c){
-    switch (c){
+  private static String replaceStringLowerCase(char c) {
+    switch (c) {
       case 'a':
       case 'b':
       case 'c':
@@ -341,9 +342,37 @@ public class StringPractice {
     }
   }
 
-  private static String replaceStringUpcaseCase(char c){
+  private static String replaceStringUpcaseCase(char c) {
     c = Character.toLowerCase(c);
     return c == 'z' ? "a" : String.valueOf((char) (c + 1));
+  }
+
+  /**
+   * 题目描述：在计算机中，通配符一种特殊语法，广泛应用于文件搜索、数据库、正则表达式等领域。现要求各位实现字符串通配符的算法。
+   * <p>
+   * 要求：实现如下2个通配符：
+   * <p>
+   * <li>*：匹配0个或以上的字符（字符由英文字母和数字0-9组成，不区分大小写。下同）</>
+   * <p>
+   * <li>？：匹配1个字符</>
+   * <p>
+   * 输入： 通配符表达式； 一组字符串。
+   * <p>
+   * 输出： 返回匹配的结果，正确输出true，错误输出false
+   */
+  public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+    while(scanner.hasNext()){
+      String pattern = scanner.nextLine();
+      String str = scanner.hasNext() ? scanner.nextLine() : "";
+      matchPattern(str, pattern);
+    }
+  }
+
+  private static void matchPattern(String str, String pattern) {
+    pattern = pattern.replaceAll("\\?", "[0-9a-zA-Z]");
+    pattern = pattern.replaceAll("\\*", "[0-9a-zA-Z]*");
+    System.out.println(str.matches(pattern));
   }
 
 }
