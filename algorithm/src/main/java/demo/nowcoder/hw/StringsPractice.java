@@ -1,10 +1,9 @@
 package demo.nowcoder.hw;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
- * 字符串类的算法
+ * 字符串类的算法练习
  *
  * @author leishiguang
  * @since v1.0
@@ -360,7 +359,7 @@ public class StringsPractice {
    * <p>
    * 输出： 返回匹配的结果，正确输出true，错误输出false
    */
-  public static void main(String[] args) {
+  public static void main11(String[] args) {
     Scanner scanner = new Scanner(System.in);
     while(scanner.hasNext()){
       String pattern = scanner.nextLine();
