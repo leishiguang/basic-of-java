@@ -383,17 +383,17 @@ public class StringsPractice {
    */
   public static void main12(String[] args) {
     Scanner sc = new Scanner(System.in);
-    while(sc.hasNext()){
+    while (sc.hasNext()) {
       revertAndReplace(sc.nextLine());
     }
   }
 
-  private static void revertAndReplace(String str){
+  private static void revertAndReplace(String str) {
     boolean[] map = new boolean[10];
     StringBuilder result = new StringBuilder();
-    for(int i = str.length() - 1; i >= 0 ; i --){
+    for (int i = str.length() - 1; i >= 0; i--) {
       int num = str.charAt(i) - '0';
-      if(!map[num]){
+      if (!map[num]) {
         map[num] = true;
         result.append(num);
       }
@@ -401,4 +401,111 @@ public class StringsPractice {
     System.out.println(result);
   }
 
+  /**
+   * 题目描述： 开发一个坐标计算工具， A表示向左移动，D表示向右移动，W表示向上移动，S表示向下移动。从（0,0）点开始移动，从输入字符串里面读取一些坐标，并将最终输入结果输出到输出文件里面。
+   * <p>
+   * 输入： 合法坐标为A(或者D或者W或者S) + 数字（两位以内） 坐标之间以;分隔。 非法坐标点需要进行丢弃。如AA10;  A1A;  $%$;  YAD; 等。
+   * <p>
+   * 输出：最终所处的坐标
+   */
+  public static void main13(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      computeAll(sc.nextLine());
+    }
+  }
+
+  private static void computeAll(String str) {
+    String[] arrs = str.split(";");
+    int x = 0;
+    int y = 0;
+    for (String arr : arrs) {
+      if (!check(arr)) {
+        continue;
+      }
+      int val = arr.charAt(1) - '0';
+      if (arr.length() == 3) {
+        val = val * 10 + (arr.charAt(2) - '0');
+      }
+      switch (arr.charAt(0)) {
+        case 'A':
+          x -= val;
+          break;
+        case 'D':
+          x += val;
+          break;
+        case 'W':
+          y += val;
+          break;
+        case 'S':
+          y -= val;
+          break;
+        default:
+          break;
+      }
+    }
+    System.out.println(x + "," + y);
+  }
+
+  /**
+   * 判断是否合法坐标，3位长度，开始为AWSD，两位数字
+   */
+  private static boolean check(String str) {
+    if (str == null || str.length() == 0 || str.length() > 3) {
+      return false;
+    }
+    return str.matches("[ADWS][0-9]") || str.matches("[ADWS][0-9][0-9]");
+  }
+
+  /**
+   * 题目描述
+   * <p>
+   * 密码要求: 1.长度超过8位 2.包括大小写字母.数字.其它符号,以上四种至少三种 3.不能有相同长度超2的子串重复 说明:长度超过2的子串
+   * <p>
+   * 输入描述: 一组或多组长度超过2的子符串。每组占一行
+   * <p>
+   * 输出描述: 如果符合要求输出：OK，否则输出NG
+   */
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      goodPassword(sc.nextLine());
+    }
+  }
+
+  private static void goodPassword(String str) {
+    String good = "OK";
+    String bad = "NG";
+    if (str.length() < 8) {
+      System.out.println(bad);
+      return;
+    }
+    boolean[] map = new boolean[4];
+    for (char c : str.toCharArray()) {
+      if (Character.isDigit(c)) {
+        map[0] = true;
+      } else if (Character.isUpperCase(c)) {
+        map[1] = true;
+      } else if (Character.isLowerCase(c)) {
+        map[2] = true;
+      } else {
+        map[3] = true;
+      }
+    }
+    for (boolean m : map) {
+      if (!m) {
+        System.out.println(bad);
+        return;
+      }
+    }
+    for (int i = 0; i < str.length() - 3; i++) {
+      String str1 = str.substring(i, i + 3);
+      String str2 = str.substring(i + 3);
+      if (str2.contains(str1)) {
+        System.out.println(bad);
+        return;
+      }
+    }
+    System.out.println(good);
+  }
 }
