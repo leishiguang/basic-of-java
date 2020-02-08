@@ -466,7 +466,7 @@ public class StringsPractice {
    * <p>
    * 输出描述: 如果符合要求输出：OK，否则输出NG
    */
-  public static void main(String[] args) {
+  public static void main14(String[] args) {
     Scanner sc = new Scanner(System.in);
     while (sc.hasNext()) {
       goodPassword(sc.nextLine());
@@ -508,4 +508,169 @@ public class StringsPractice {
     }
     System.out.println(good);
   }
+
+  /**
+   * 找到最长回文
+   */
+  public static void main15(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      String str = sc.nextLine();
+      maxReback1(str);
+      maxReback2(str);
+    }
+  }
+
+  /**
+   * 找到最长回文，中间指针解法
+   */
+  private static void maxReback1(String str) {
+    int max = 1;
+    //处理基数回文的情况
+    for (int center = 1; center <= str.length() - 2; center++) {
+      int i = 1;
+      int left = center - i;
+      int right = center + i;
+      while (left >= 0 && right <= str.length() - 1) {
+        if (str.charAt(left) != str.charAt(right)) {
+          break;
+        }
+        i++;
+        left = center - i;
+        right = center + i;
+      }
+      max = Math.max(max, i * 2 - 1);
+    }
+    //处理偶数回文的情况
+    for (int mid = 0; mid <= str.length() - 2; mid++) {
+      int i = 0;
+      int left = mid;
+      int right = mid + 1;
+      while (left >= 0 && right <= str.length() - 1) {
+        if (str.charAt(left) != str.charAt(right)) {
+          break;
+        }
+        i++;
+        left = mid - i;
+        right = mid + i + 1;
+      }
+      max = Math.max(max, i * 2);
+    }
+    System.out.println(max);
+  }
+
+  /**
+   * 找到最长回文，动态规划解法
+   */
+  private static void maxReback2(String a) {
+    String b = new StringBuilder(a).reverse().toString();
+    int aLen = a.length() + 1;
+    int bLen = b.length() + 1;
+    int max = 0;
+    int[][] dp = new int[aLen][bLen];
+    for (int i = 1; i < aLen; i++) {
+      for (int j = 1; j < bLen; j++) {
+        if (a.charAt(i - 1) == b.charAt(j - 1)) {
+          dp[i][j] = dp[i - 1][j - 1] + 1;
+        } else {
+          dp[i][j] = 0;
+        }
+        if (dp[i][j] > max) {
+          max = dp[i][j];
+        }
+      }
+    }
+    System.out.println(max);
+  }
+
+  /**
+   * 字符串合并处理。题目描述： 按照指定规则对输入的字符串进行处理。
+   * <p>
+   * 详细描述： 将输入的两个字符串合并。
+   * <p>
+   * 对合并后的字符串进行排序，要求为：下标为奇数的字符和下标为偶数的字符分别从小到大排序。这里的下标意思是字符在字符串中的位置。
+   * <p>
+   * 对排序后的字符串进行操作，如果字符为‘0’——‘9’或者‘A’——‘F’或者‘a’——‘f’，则对他们所代表的16进制的数进行BIT倒序的操作，并转换为相应的大写字符。如字符为‘4’，为0100b，则翻转后为0010b，也就是2。转换后的字符为‘2’；
+   * 如字符为‘7’，为0111b，则翻转后为1110b，也就是e。转换后的字符为大写‘E’。
+   * <p>
+   * 举例：输入str1为"dec"，str2为"fab"，合并为“decfab”，分别对“dca”和“efb”进行排序，排序后为“abcedf”，转换后为“5D37BF”
+   * <p>
+   * 示例：输入 dec fab，输出 5D37BF
+   */
+  public static void main16(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      joinAndChange(sc.nextLine());
+    }
+  }
+
+  private static void joinAndChange(String tmpStr) {
+    String joinedStr = jointAndSort(tmpStr);
+    StringBuilder result = new StringBuilder();
+    for (char c : joinedStr.toCharArray()) {
+      result.append(charRevertAndChange(c));
+    }
+    System.out.println(result);
+  }
+
+  /**
+   * 合并与排序
+   */
+  private static String jointAndSort(String tmpStr) {
+    String[] arr = tmpStr.split(" ");
+    String str = arr[0] + arr[1];
+    StringBuilder str1 = new StringBuilder();
+    StringBuilder str2 = new StringBuilder();
+    boolean key = true;
+    for (char c : str.toCharArray()) {
+      if (key) {
+        str1.append(c);
+      } else {
+        str2.append(c);
+      }
+      key = !key;
+    }
+    char[] c1 = str1.toString().toCharArray();
+    char[] c2 = str2.toString().toCharArray();
+    Arrays.sort(c1);
+    Arrays.sort(c2);
+    StringBuilder jointedStrBuilder = new StringBuilder();
+    for (int i = 0; i < c2.length; i++) {
+      jointedStrBuilder.append(c1[i]).append(c2[i]);
+    }
+    if (c1.length > c2.length) {
+      jointedStrBuilder.append(c1[c1.length - 1]);
+    }
+    return jointedStrBuilder.toString();
+  }
+
+  /**
+   * 二进制转换，十六进制转换
+   */
+  private static String charRevertAndChange(char c) {
+    int num = 0;
+    if (Character.isUpperCase(c) && c <= 'F') {
+      num = c - 'A' + 10;
+    } else if (Character.isLowerCase(c) && c <= 'f') {
+      num = c - 'a' + 10;
+    } else if (Character.isDigit(c)) {
+      num = c - '0';
+    } else {
+      return String.valueOf(c);
+    }
+    StringBuilder binaryString = new StringBuilder(Integer.toBinaryString(num));
+    //这儿补足长度为4位
+    if (binaryString.length() < 4) {
+      int n = 4 - binaryString.length();
+      do {
+        binaryString.insert(0, "0");
+      } while (--n > 0);
+    }
+    String revertString = new StringBuilder(binaryString.toString()).reverse().toString();
+    int revertValue = Integer.parseInt(revertString, 2);
+    char revertChar = (char) (revertValue >= 10 ? 'A' + revertValue - 10 : revertValue + '0');
+    return String.valueOf(revertChar);
+  }
+
+
 }
