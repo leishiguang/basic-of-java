@@ -92,7 +92,7 @@ public class OthersPractice {
    * <p>
    * 输出描述: 对于每组测试数据，输出一行，表示最多可以喝的汽水瓶数。如果一瓶也喝不到，输出0。
    */
-  public static void main(String[] args) {
+  public static void main3(String[] args) {
     Scanner sc = new Scanner(System.in);
     while (sc.hasNext()) {
       howManyBots(sc.nextInt());
@@ -100,7 +100,7 @@ public class OthersPractice {
   }
 
   private static void howManyBots(Integer num) {
-    if(num == null || num == 0){
+    if (num == null || num == 0) {
       return;
     }
     int count = 0;
@@ -113,6 +113,34 @@ public class OthersPractice {
       count += 1;
     }
     System.out.println(count);
+  }
+
+  /**
+   * 题目描述 首先输入要输入的整数个数n，然后输入n个整数。输出为n个整数中负数的个数，和所有正整数的平均值，结果保留一位小数。
+   * <p>
+   * 输入描述: 首先输入一个正整数n， 然后输入n个整数。
+   * <p>
+   * 输出描述: 输出负数的个数，和所有正整数的平均值
+   */
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      int n = Integer.parseInt(sc.nextLine());
+      int negativeCount = 0;
+      int positiveCount = 0;
+      int positiveSum = 0;
+      String[] strs = sc.nextLine().split(" ");
+      for (String str : strs) {
+        int num = Integer.parseInt(str);
+        if (num < 0) {
+          negativeCount++;
+        } else if (num > 0) {
+          positiveCount++;
+          positiveSum += num;
+        }
+      }
+      System.out.printf("%d %.1f\n", negativeCount, positiveSum * 1.0 / positiveCount);
+    }
   }
 
 }

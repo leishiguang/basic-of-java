@@ -673,4 +673,66 @@ public class StringsPractice {
   }
 
 
+  /**
+   * 题目描述 对字符串中的所有单词进行倒排。
+   * <p>
+   * 说明：
+   * <p>
+   * 1、每个单词是以26个大写或小写英文字母构成；
+   * <p>
+   * 2、非构成单词的字符均视为单词间隔符；
+   * <p>
+   * 3、要求倒排后的单词间隔符以一个空格表示；如果原字符串中相邻单词间有多个间隔符时，倒排转换后也只允许出现一个空格间隔符；
+   * <p>
+   * 4、每个单词最长20个字母；
+   * <p>
+   * 输入描述: 输入一行以空格来分隔的句子
+   * <p>
+   * 输出描述: 输出句子的逆序
+   */
+  public static void main17(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      String[] sp = sc.nextLine().split("[^a-zA-Z]+");
+      StringBuilder sb = new StringBuilder();
+      for (int i = sp.length - 1; i >= 0; i--) {
+        sb.append(sp[i]).append(" ");
+      }
+      System.out.println(sb.toString().trim());
+    }
+    sc.close();
+  }
+
+  /**
+   * 在字符串中找出连续最长的数字串
+   */
+  public static void main18(String[] args) {
+    Scanner scan = new Scanner(System.in);
+    while (scan.hasNext()) {
+      StringBuilder str1 = new StringBuilder();
+      String str = scan.nextLine();
+      for (char ch : str.toCharArray()) {
+        //将不是数字的字符全部变成a
+        if (ch >= '0' && ch <= '9') {
+          str1.append(ch);
+        } else {
+          str1.append("a");
+        }
+      }
+      //按a分割
+      String[] strs = str1.toString().split("a");
+      //记录最长的连续数字串的长度
+      int max = 0;
+      for (String s : strs) {
+        max = Math.max(s.length(), max);
+      }
+      for (String s : strs) {
+        if (s.length() == max) {
+          System.out.print(s);
+        }
+      }
+      System.out.println("," + max);
+    }
+  }
+
 }
