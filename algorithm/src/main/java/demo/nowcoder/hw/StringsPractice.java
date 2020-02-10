@@ -735,4 +735,112 @@ public class StringsPractice {
     }
   }
 
+  /**
+   * 从字符串中找到最长连续数字
+   */
+  public static void main19(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      String str = sc.nextLine();
+      maxDigit(str);
+    }
+  }
+
+  private static void maxDigit(String str) {
+    int max = 0;
+    String result = "";
+    //判断没有小数点的情况
+    List<Integer> pointIndexs = new ArrayList<>();
+    char[] chars = str.toCharArray();
+    int length = chars.length;
+    StringBuilder strWithoutOtherBuilder = new StringBuilder();
+    for (int i = 0; i < length; i++) {
+      char c = chars[i];
+      if (c == '.') {
+        pointIndexs.add(i);
+      }
+      if (Character.isDigit(c)) {
+        strWithoutOtherBuilder.append(c);
+      } else {
+        strWithoutOtherBuilder.append("a");
+      }
+    }
+    String[] strsWithoutPoint = strWithoutOtherBuilder.toString().split("a");
+    for (String tmp : strsWithoutPoint) {
+      if (tmp.length() >= max) {
+        max = tmp.length();
+        result = tmp;
+      }
+    }
+    int lastIndex = str.lastIndexOf(result);
+    boolean pointMax = false;
+    //在小数点的情况，识别小数点，从左右两边开始处理。
+    for (Integer pointIndex : pointIndexs) {
+      int left = 1;
+      int right = 1;
+      while (pointIndex - left >= 0) {
+        if (!Character.isDigit(str.charAt(pointIndex - left))) {
+          break;
+        }
+        left++;
+      }
+      while (pointIndex + right < length) {
+        if (!Character.isDigit(str.charAt(pointIndex + right))) {
+          break;
+        }
+        right++;
+      }
+      if(left == 1 || right == 1){
+        continue;
+      }
+      int tmpMax = left + right - 1;
+      if (tmpMax > max) {
+        max = tmpMax;
+        result = str.substring(pointIndex - left + 1, pointIndex + right);
+        pointMax = true;
+      }
+      if(tmpMax == max){
+        if (pointMax || pointIndex - left + 1 >= lastIndex) {
+          result = str.substring(pointIndex - left + 1, pointIndex + right);
+          pointMax = true;
+        }
+      }
+    }
+    System.out.println(result);
+  }
+
+
+  /**
+   * 补位拆分后，按倒序输出
+   */
+  public static void main20(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+      String str = sc.nextLine();
+      splitAndSort(str);
+    }
+  }
+
+  private static void splitAndSort(String str) {
+    String[] strings = str.split(" ");
+    List<String> result = new LinkedList<>();
+    for (int i = 1; i < strings.length; i++) {
+      String tmp = strings[i];
+      while (tmp.length() > 8){
+        result.add(tmp.substring(0,8));
+        tmp = tmp.substring(8);
+      }
+      tmp += "00000000";
+      result.add(tmp.substring(0,8));
+    }
+    String[] good = new String[result.size()];
+    result.toArray(good);
+    Arrays.sort(good);
+    StringBuilder stringBuilder = new StringBuilder();
+    for (String tmp : good) {
+      stringBuilder.append(tmp).append(" ");
+    }
+    System.out.println(stringBuilder.toString().trim());
+  }
+
 }
