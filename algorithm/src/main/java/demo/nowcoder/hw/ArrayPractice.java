@@ -52,4 +52,30 @@ public class ArrayPractice {
       }
     }
   }
+
+
+  /**
+   * 切最少的砖块
+   */
+  public int leastBricks(List<List<Integer>> params) {
+    HashMap<Integer, Integer> maxMap = new HashMap<>();
+    int maxValue = 0;
+    for (List<Integer> param : params) {
+      int sum = 0;
+      for (Integer p : param) {
+        sum += p;
+        if (maxMap.containsKey(sum)) {
+          maxMap.put(sum, maxMap.get(sum) + 1);
+        } else {
+          maxMap.put(sum, 1);
+        }
+      }
+    }
+    maxMap.put(params.size(), 0);
+    for (Map.Entry<Integer, Integer> entry : maxMap.entrySet()) {
+      maxValue = Math.max(maxValue, entry.getValue());
+    }
+    int total = params.size();
+    return total - maxMap.get(maxValue);
+  }
 }

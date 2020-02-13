@@ -1,4 +1,4 @@
-package demo.nowcoder.hw;
+package demo.nowcoder;
 
 import java.util.*;
 
