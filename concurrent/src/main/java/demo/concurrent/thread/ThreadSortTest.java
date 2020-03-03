@@ -1,6 +1,8 @@
 package demo.concurrent.thread;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -101,5 +103,60 @@ public class ThreadSortTest {
     threadA.start();
     threadB.start();
     System.in.read();
+  }
+
+  @Test
+  @DisplayName("以join方式进行")
+  public void testC() throws InterruptedException {
+    Thread threadA = new Thread(()->{
+      System.out.println("A");
+    });
+    Thread threadB = new Thread(()->{
+      System.out.println("B");
+    });
+    Thread threadC = new Thread(()->{
+      System.out.println("C");
+    });
+    threadA.start();
+    threadA.join();
+    threadB.start();
+    threadB.join();
+    threadC.start();
+    threadC.join();
+  }
+
+  @Test
+  @DisplayName("以单线程任务池方式进行")
+  public void testD() {
+    Thread threadA = new Thread(()->{
+      System.out.println("A");
+    });
+    Thread threadB = new Thread(()->{
+      System.out.println("B");
+    });
+    Thread threadC = new Thread(()->{
+      System.out.println("C");
+    });
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    executorService.execute(threadA);
+    executorService.execute(threadB);
+    executorService.execute(threadC);
+  }
+
+  @Test
+  @DisplayName("以run方式进行")
+  public void testE() {
+    Thread threadA = new Thread(()->{
+      System.out.println("A");
+    });
+    Thread threadB = new Thread(()->{
+      System.out.println("B");
+    });
+    Thread threadC = new Thread(()->{
+      System.out.println("C");
+    });
+    threadA.run();
+    threadB.run();
+    threadC.run();
   }
 }
