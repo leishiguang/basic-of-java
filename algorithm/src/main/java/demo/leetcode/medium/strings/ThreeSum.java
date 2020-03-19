@@ -19,17 +19,24 @@ import java.util.Set;
 public class ThreeSum {
 
   public List<List<Integer>> threeSum(int[] nums) {
-    //第一步，以某个数值为两数之和，同时执行去重
+    //特判
+    if (nums == null || nums.length < 3) {
+      return new ArrayList<>();
+    }
+    Arrays.sort(nums);
+    if(nums[0] > 0 || nums[nums.length - 1] < 0){
+      return new ArrayList<>();
+    }
+    //第一步，以某个数值为两数之和，同时执行第一个数的去重
     Set<Integer> twoSumSet = new HashSet<>();
     List<List<Integer>> result = new ArrayList<>();
-    int[] newNums = nums;
-    for (int i = 0; i < nums.length; i++) {
+    for (int i = 0; i < nums.length - 2; i++) {
       if (twoSumSet.contains(nums[i])) {
         continue;
       }
       twoSumSet.add(nums[i]);
       //第二步，生成新的数组
-      newNums = splitNums(newNums, i);
+      int[] newNums = splitNums(nums, i);
       //第三步，计算两数之和
       List<List<Integer>> twoSum = twoSum(newNums, nums[i] * -1);
       result.addAll(twoSum);
@@ -41,14 +48,8 @@ public class ThreeSum {
    * 去除第i位的元素，生成新数组
    */
   private int[] splitNums(int[] nums, int index) {
-    int[] newNums = new int[nums.length - 1];
-    for (int i = 0; i < newNums.length; i++) {
-      if (i < index) {
-        newNums[i] = nums[i];
-      } else if (i > index) {
-        newNums[i] = nums[1 + i];
-      }
-    }
+    int[] newNums = new int[nums.length - index - 1];
+    System.arraycopy(nums, index + 1, newNums, 0, newNums.length);
     return newNums;
   }
 
@@ -67,8 +68,7 @@ public class ThreeSum {
     }
     for (Map.Entry<Integer, Integer> entry : sumMap.entrySet()) {
       if (entry.getValue() != null) {
-        List<Integer> tmp = Arrays.asList(-1 * k, entry.getKey(), entry.getValue());
-        result.add(tmp);
+        result.add(Arrays.asList(-1 * k, entry.getKey(), entry.getValue()));
       }
     }
     return result;
