@@ -1,6 +1,5 @@
-package demo.leetcode;
+package demo.leetcode.problems;
 
-import demo.leetcode.problems.L1;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @since v1.0
  */
 class L1Test {
+
     @Test
     void go() {
         int[] nums = {2, 7, 11, 15};
@@ -20,10 +20,8 @@ class L1Test {
         int[] expected = {1, 0};
         int[] actual = L1.twoSum1(nums, targets);
         assertArrayEquals(expected,actual);
-
         int[] nums2 = {3,2,4};
         int targets2 = 6;
         L1.twoSum1(nums2, targets2);
-
     }
 }
