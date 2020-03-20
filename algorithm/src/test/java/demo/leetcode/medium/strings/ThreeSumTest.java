@@ -20,10 +20,12 @@ class ThreeSumTest {
   @BeforeAll
   void beforeAll() {
     cases = new ArrayList<>();
-    cases.add(new int[]{0, 0, 0});
+    cases.add(new int[]{-2, -1, -1, 0, 2});
+    cases.add(new int[]{-1, 0, 1, -1, 1});
     cases.add(new int[]{-1, 0, 1, 2, -1, 1, 0, 0, -4});
     cases.add(new int[]{-6, -5, -4, 2, 1, 3, 4, 0, 1, 2, -1, 1, 0, 0, -4});
     cases.add(new int[]{0, 0, 0, 0});
+    cases.add(new int[]{0, 0, 0});
     cases.add(new int[]{1, 2, 3});
     cases.add(new int[]{1, 2, -3});
   }
@@ -34,6 +36,7 @@ class ThreeSumTest {
     ThreeSum threeSum = new ThreeSum();
     for (int[] c : cases) {
       threeSum.threeSum(c);
+      threeSum.threeSum2(c);
     }
   }
 }

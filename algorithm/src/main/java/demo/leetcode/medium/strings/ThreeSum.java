@@ -2,10 +2,8 @@ package demo.leetcode.medium.strings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -18,13 +16,16 @@ import java.util.Set;
  */
 public class ThreeSum {
 
+  /**
+   * 半暴力的解法，找出一个人，再找其它两个人
+   */
   public List<List<Integer>> threeSum(int[] nums) {
     //特判
     if (nums == null || nums.length < 3) {
       return new ArrayList<>();
     }
     Arrays.sort(nums);
-    if(nums[0] > 0 || nums[nums.length - 1] < 0){
+    if (nums[0] > 0 || nums[nums.length - 1] < 0) {
       return new ArrayList<>();
     }
     //第一步，以某个数值为两数之和，同时执行第一个数的去重
@@ -36,16 +37,19 @@ public class ThreeSum {
       }
       twoSumSet.add(nums[i]);
       //第二步，生成新的数组
-      int[] newNums = splitNums(nums, i);
-      //第三步，计算两数之和
-      List<List<Integer>> twoSum = twoSum(newNums, nums[i] * -1);
+      //int[] newNums = splitNums(nums, i);
+      //第三步，方法一，计算两数之和
+      //List<List<Integer>> twoSum = twoSum(newNums, nums[i] * -1);
+      //第三步，方法二，直接计算
+      List<List<Integer>> twoSum = twoSum2(nums, i);
       result.addAll(twoSum);
+
     }
     return result;
   }
 
   /**
-   * 去除第i位的元素，生成新数组
+   * 从第i位的元素，开始生成新数组
    */
   private int[] splitNums(int[] nums, int index) {
     int[] newNums = new int[nums.length - index - 1];
@@ -58,17 +62,84 @@ public class ThreeSum {
    */
   private List<List<Integer>> twoSum(int[] nums, int k) {
     List<List<Integer>> result = new ArrayList<>();
-    HashMap<Integer, Integer> sumMap = new HashMap<>();
+    Set<Integer> sumMap = new HashSet<>();
+    Set<Integer> numCollect = new HashSet<>();
     for (int num : nums) {
-      if (sumMap.containsKey(k - num)) {
-        sumMap.put(num, k - num);
+      if (sumMap.contains(k - num)) {
+        numCollect.add(num);
       } else {
-        sumMap.put(num, null);
+        sumMap.add(num);
       }
     }
-    for (Map.Entry<Integer, Integer> entry : sumMap.entrySet()) {
-      if (entry.getValue() != null) {
-        result.add(Arrays.asList(-1 * k, entry.getKey(), entry.getValue()));
+    for (Integer num : numCollect) {
+      result.add(Arrays.asList(-1 * k, num, k - num));
+    }
+    return result;
+  }
+
+  /**
+   * 两数之和，数组中哪些组合的值等于第i位的负数
+   */
+  private List<List<Integer>> twoSum2(int[] nums, int index) {
+    int k = nums[index] * -1;
+    List<List<Integer>> result = new ArrayList<>();
+    Set<Integer> sumMap = new HashSet<>();
+    Set<Integer> numCollect = new HashSet<>();
+    for (int i = index + 1; i < nums.length; i++) {
+      if (sumMap.contains(k - nums[i])) {
+        numCollect.add(nums[i]);
+      } else {
+        sumMap.add(nums[i]);
+      }
+    }
+    for (Integer num : numCollect) {
+      result.add(Arrays.asList(-1 * k, num, k - num));
+    }
+    return result;
+  }
+
+  /**
+   * 优先选择C位，再左右两边找可能的值
+   */
+  public List<List<Integer>> threeSum2(int[] nums) {
+    List<List<Integer>> result = new ArrayList<>();
+    //特判
+    if (nums == null || nums.length < 3) {
+      return result;
+    }
+    Arrays.sort(nums);
+    if (nums[nums.length - 1] < 0) {
+      return result;
+    }
+    //依次选择C位
+    for (int i = 0; i < nums.length - 2; i++) {
+      if (nums[i] > 0) {
+        break;
+      }
+      if (i > 0 && nums[i] == nums[i - 1]) {
+        continue;
+      }
+      int left = i + 1;
+      int last = nums.length - 1;
+      while (left < last) {
+        int sum = nums[i] + nums[left] + nums[last];
+        if (sum == 0) {
+          result.add(Arrays.asList(nums[i], nums[left], nums[last]));
+          while (left < last && nums[left] == nums[left + 1]) {
+            left++;
+          }
+          while (left < last && nums[last] == nums[last - 1]) {
+            last--;
+          }
+          left ++;
+          last --;
+        }
+        if (sum < 0) {
+          left++;
+        }
+        if (sum > 0) {
+          last--;
+        }
       }
     }
     return result;
